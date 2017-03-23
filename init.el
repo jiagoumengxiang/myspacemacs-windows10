@@ -37,19 +37,21 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     ;;auto-completion
+     auto-completion
      better-defaults
      emacs-lisp
-     ;; git
+     git
      java
      markdown
      org
      (shell :variables
-            shell-default-height 30
+            shell-default-shell 'shell
+            shell-default-height 50
             shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
      ;; version-control
+     (colors :variables colors-enable-nyan-cat-progress-bar t)
      html
      javascript
      )
@@ -58,7 +60,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-
+                                      groovy-mode
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -329,11 +331,11 @@ you should place your code here."
                                      ("p" "项目" entry (file+headline "~/org/project.org" "project")
                                       "* [%] %?\n  %i\n ")
                                      ))))
-    ;;eclim
-    (setq eclim-eclipse-dirs "f://eclipse"
-          eclim-executable "f://eclipse//eclim.bat")
-    ;;开启emacs透明度
-    (spacemacs/toggle-transparency)
+  ;;eclim
+  (setq eclim-eclipse-dirs "f://eclipse/"
+        eclim-executable "f://eclipse//eclim")
+  ;;开启emacs透明度
+  (spacemacs/toggle-transparency)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -345,7 +347,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet coffee-mode ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
+    (groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet coffee-mode ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

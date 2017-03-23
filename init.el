@@ -46,7 +46,7 @@ values."
      org
      (shell :variables
             shell-default-shell 'shell
-            shell-default-height 50
+            shell-default-height 35
             shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking

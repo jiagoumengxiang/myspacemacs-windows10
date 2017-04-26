@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+﻿;; -*- mode: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -31,17 +31,24 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     yaml
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-complete-with-key-sequence nil
+                      auto-completion-complete-with-key-sequence-delay 500
+                      auto-completion-private-snippets-directory nil)
      better-defaults
+     docker
      emacs-lisp
+     (java :variables java-backend 'meghanada)
      git
-     java
      markdown
      org
      (shell :variables
@@ -54,18 +61,23 @@ values."
      (colors :variables colors-enable-nyan-cat-progress-bar t)
      html
      javascript
+     (go :variables
+         go-tab-width 4)
+     jiagoumengxiang
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-                                      groovy-mode
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    ;;导致org-babel出问题
+                                    org-plus-contrib
+                                    )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -133,7 +145,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai
+   dotspacemacs-themes '(material
                          spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
@@ -274,7 +286,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -303,6 +315,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
           ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
+  ;;设置起始位置及窗口大小
+  (set-frame-position (selected-frame) 300 0)
+  (setq default-frame-alist
+        '((height . 50) (width . 150)))
+
 )
 
 (defun dotspacemacs/user-config ()
@@ -312,10 +329,16 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+
+ ;; (setq org-plantuml-jar-path (expand-file-name "~/.spacemacs.d/plantuml.jar"))
+ ;; (setq org-ditaa-jar-path "~/.spacemacs.d/ditaa.jar")
+
   ;;org-mode
   (with-eval-after-load 'org
     ;; here goes your Org config :)
     ;; ....
+
     (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
     (setq org-agenda-files (quote ("~/org/")))
     (setq org-capture-templates(quote (
@@ -331,10 +354,26 @@ you should place your code here."
                                       "* TODO %?\n  %i\n ")
                                      ("p" "项目" entry (file+headline "~/org/project.org" "project")
                                       "* [%] %?\n  %i\n ")
-                                     ))))
+                                     )))
+
+    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
+
+    (setq org-ditaa-jar-path "~/ditaa.jar")
+    (setq org-plantuml-jar-path (expand-file-name "~/plantuml.jar"))
+
+    ;; active Org-babel languages
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '(;; other Babel languages
+       (plantuml . t)
+       (ditaa . t)
+       ))
+    (setq org-confirm-babel-evaluate nil))
   ;;eclim
-  (setq eclim-eclipse-dirs "f://eclipse/"
-        eclim-executable "f://eclipse//eclim")
+  ;;(setq eclim-eclipse-dirs "f://eclipse/"
+  ;;     eclim-executable "f://eclipse//eclim")
+
+  (setq-default tab-width 2)
   ;;开启emacs透明度
   (spacemacs/toggle-transparency)
 )
@@ -348,10 +387,30 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet coffee-mode ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
+    (yaml-mode dockerfile-mode docker tablist docker-tramp powershell winum unfill fuzzy plantuml-mode coffee-mode go-guru go-eldoc company-go go-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((((class color) (min-colors 89)) (:foreground "#ffffff" :background "#263238")))))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (meghanada groovy-imports pcache ensime sbt-mode scala-mode symon string-inflection helm-purpose window-purpose imenu-list go-rename yaml-mode dockerfile-mode docker tablist docker-tramp powershell winum unfill fuzzy plantuml-mode coffee-mode go-guru go-eldoc company-go go-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((((class color) (min-colors 89)) (:foreground "#ffffff" :background "#263238")))))
+)

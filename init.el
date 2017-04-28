@@ -76,7 +76,7 @@ values."
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
                                     ;;导致org-babel出问题
-                                    org-plus-contrib
+;;                                    org-plus-contrib
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -340,7 +340,7 @@ you should place your code here."
     ;; ....
 
     (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
-    (setq org-agenda-files (quote ("~/org/")))
+    (setq org-agenda-files (quote ("~/OneDrive/org/")))
     (setq org-capture-templates(quote (
                                      ("a" "重要紧急" entry (file+headline "~/org/gtd.org" "Tasks")
                                       "* TODO [#A] %?\n  %i\n")
@@ -367,6 +367,7 @@ you should place your code here."
      '(;; other Babel languages
        (plantuml . t)
        (ditaa . t)
+       (javascript . t)
        ))
     (setq org-confirm-babel-evaluate nil))
   ;;eclim

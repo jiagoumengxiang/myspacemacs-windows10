@@ -30,7 +30,12 @@
 ;;; Code:
 
 (defconst jiagoumengxiang-packages
-  '()
+  '(
+;;    request
+;;    org-gcal
+;;    alert
+    org-brain
+    )
   "The list of Lisp packages required by the jiagoumengxiang layer.
 
 Each entry is either:
@@ -58,5 +63,42 @@ Each entry is either:
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
+;; (defun jiagoumengxiang/init-request()
+;;   "Initialize calfw and add key-bindings"
+;;   (use-package request)
+;;   )
 
-;;; packages.el ends here
+;; (defun jiagoumengxiang/init-org-gcal ()
+;;   "Initialize org-gcal"
+;;   (use-package org-gcal)
+;;   )
+
+
+
+;; (defun jiagoumengxiang/init-alert ()
+;;   "Initialize alert"
+;;   (use-package alert)
+;;  )
+
+(defun jiagoumengxiang/init-org-brain()
+  (use-package org-brain
+    :defer t
+    :init
+    (progn
+      (spacemacs/set-leader-keys
+        ;; org-brain
+        "aob" 'org-brain-open
+        "aoB" 'org-brain-visualize)
+      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+    ;;org-brain
+    (setq org-brain-path "~/Documents/jianguocloud/brain")
+    ;; For Evil users
+    (with-eval-after-load 'evil
+      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+    :config
+    ;; Save/load org-brain caches to/from disk
+    (org-brain-activate-cache-saving)
+    ))
+
+
+;;packages.el ends here

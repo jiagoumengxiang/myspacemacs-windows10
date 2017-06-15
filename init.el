@@ -66,6 +66,8 @@ values."
      (go :variables
          go-tab-width 4)
      jiagoumengxiang
+     spotify
+     docker
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -78,7 +80,45 @@ values."
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
                                     ;;导致org-babel出问题
-;;                                    org-plus-contrib
+;;                                  org-plus-contrib
+                                    magit-gh-pulls
+                                    magit-gitflow
+                                    ;;evil-mc
+                                    skewer-mode
+                                    ;;vi-tilde-fringe
+                                    coffee-mode
+                                    ace-jump-helm-line
+                                    ;;evil-tutor
+                                    eyebrowse
+                                    stickyfunc-enhance
+                                    smooth-scrolling
+                                    org-repo-todo
+                                    chinese-wbim
+                                    chinese-pyim
+                                    srefactor
+                                    org-download
+                                    org-timer
+                                    org-plus-contrib
+                                    org-tree-slide
+                                    git-gutter
+                                    git-gutter-fringe
+                                    spaceline
+                                    ;; i prefer iedit
+                                    multiple-cursors
+                                    ;; disable it for lispy-mode
+                                    ;;https://github.com/abo-abo/lispy/issues/137
+                                    ;;evil-escape
+                                    ;;At first, I should disable hydra in zilongshanren layer and install clj-refactor, after it is installed.
+                                    ;; I could re-enable it again in zilongshanren layer.
+                                    ;; clj-refactor
+                                    ;;remove from spacemacs distribution
+                                    ;; neotree
+                                    leuven-theme
+                                    gh-md
+                                    evil-lisp-state
+                                    spray
+                                    doc-view
+                                    lorem-ipsum
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -322,6 +362,28 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq default-frame-alist
         '((height . 50) (width . 150)))
 
+  (server-start)
+
+;;换行符，好看的
+  (define-fringe-bitmap 'right-curly-arrow
+    [#b00000000
+     #b00000000
+     #b00000000
+     #b00000000
+     #b01110000
+     #b00010000
+     #b00010000
+     #b00000000])
+  (define-fringe-bitmap 'left-curly-arrow
+    [#b00000000
+     #b00001000
+     #b00001000
+     #b00001110
+     #b00000000
+     #b00000000
+     #b00000000
+     #b00000000])
+
 )
 
 (defun dotspacemacs/user-config ()
@@ -342,19 +404,21 @@ you should place your code here."
     ;; ....
 
     (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
-    (setq org-agenda-files (quote ("~/OneDrive/org/")))
+    (setq org-agenda-files (quote ("~/Documents/jianguocloud/org/")))
     (setq org-capture-templates(quote (
-                                     ("a" "重要紧急" entry (file+headline "~/OneDrive/org/gtd.org" "Tasks")
+                                     ("a" "重要紧急" entry (file+headline "~/Documents/jianguocloud/org/gtd.org" "Tasks")
                                       "* TODO [#A] %?\n  %i\n")
-                                     ("b" "重要不紧急" entry (file+headline "~/OneDrive/org/gtd.org" "Tasks")
+                                     ("b" "重要不紧急" entry (file+headline "~/Documents/jianguocloud/org/gtd.org" "Tasks")
                                       "* TODO [#B] %?\n  %i\n")
-                                     ("c" "不重要紧急" entry (file+headline "~/OneDrive/org/gtd.org" "Tasks")
+                                     ("c" "不重要紧急" entry (file+headline "~/Documents/jianguocloud/org/gtd.org" "Tasks")
                                       "* TODO [#C] %?\n  %i\n")
-                                     ("t" "普通任务" entry (file+headline "~/OneDrive/org/gtd.org" "Tasks")
+                                     ("t" "普通任务" entry (file+headline "~/Documents/jianguocloud/org/gtd.org" "Tasks")
                                       "* TODO %?\n  %i\n ")
-                                     ("h" "习惯" entry (file+headline "~/OneDrive/org/hobbit.org" "hobbit")
+                                     ("h" "习惯" entry (file+headline "~/Documents/jianguocloud/org/hobbit.org" "hobbit")
                                       "* TODO %?\n  %i\n ")
-                                     ("p" "项目" entry (file+headline "~/OneDrive/org/project.org" "project")
+                                     ("p" "项目" entry (file+headline "~/Documents/jianguocloud/org/project.org" "project")
+                                      "* [%] %?\n  %i\n ")
+                                     ("s" "日程" entry (file+headline "~/Documents/jianguocloud/org/calender.org" "Calender")
                                       "* [%] %?\n  %i\n ")
                                      )))
 
@@ -374,6 +438,18 @@ you should place your code here."
        ))
     (setq org-confirm-babel-evaluate nil)
     (setq org-export-backends (quote (html icalendar latex md)))
+
+    ;;org2calender
+    ;; (use-package org-gcal
+    ;;   :ensure t
+    ;;   :config
+    ;;   (setq org-gcal-client-id "729783329286-u5duilt0626s2dnr8opsj79u5ko0kenh.apps.googleusercontent.com"
+    ;;         org-gcal-client-secret "-Jr4mFXNaNiL69Fic5cesVXX"
+    ;;         org-gcal-file-alist '(("kingdemoncc@gmail.com" .  "~/Documents/jianguocloud/org/calender.org"))))
+
+    ;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+    ;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync))) 
+
     )
   ;;eclim
   ;;(setq eclim-eclipse-dirs "f://eclipse/"
@@ -381,7 +457,7 @@ you should place your code here."
 
   (setq-default tab-width 2)
   ;;开启emacs透明度
-  (spacemacs/toggle-transparency)
+;;  (spacemacs/toggle-transparency)
 
   (dolist (charset '(kana han cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font) charset
@@ -425,7 +501,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yapfify ensime sbt-mode meghanada sql-indent yaml-mode dockerfile-mode docker tablist docker-tramp powershell winum unfill fuzzy plantuml-mode coffee-mode go-guru go-eldoc company-go go-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
+    (spotify helm-spotify multi org-brain request-deferred deferred calfw org-gcal live-py-mode scala-mode yapfify ensime sbt-mode meghanada sql-indent yaml-mode dockerfile-mode docker tablist docker-tramp powershell winum unfill fuzzy plantuml-mode coffee-mode go-guru go-eldoc company-go go-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -17,7 +17,14 @@
   "Multiply NUMBER by seven."
   (interactive)
   (cond ((stringp (buffer-file-name))
-         (call-process-shell-command (format "start explorer  %s" (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))))
+         (call-process-shell-command (format "start %s" (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))))
+
+;;shell here
+(defun hr-open-chrome()
+  "Multiply NUMBER by seven."
+  (interactive)
+  (call-process-shell-command  "start %HOME%/.spacemacs.d/chrome" nil nil))
+
 
 
 (defun hr-notify (title message)
@@ -39,4 +46,20 @@
 (add-hook 'org-pomodoro-killed-hook
           (lambda ()
             (hr-notify "Pomodoro Killed" "One does not simply kill a pomodoro!")))
+
+
+
+
+(defun hr-request()
+  ""
+  (interactive)
+  (request
+   "http://httpbin.org/get"
+   :params '(("key" . "value") ("key2" . "value2"))
+   :parser 'json-read
+   :success (cl-function
+             (lambda (&key data &allow-other-keys)
+               (message "I sent: %S" (assoc-default 'args data))))))
+
+
 

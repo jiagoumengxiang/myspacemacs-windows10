@@ -3,14 +3,26 @@
 (defun hr-open-powershell ()
   "Multiply NUMBER by seven."
   (interactive)
-  (call-process-shell-command  "start powershell -NoExit cd %HOME%" nil nil))
+  (call-process-shell-command  "C:/Users/kingcc/program/cmder_mini/Cmder.exe %HOME%" nil nil))
 
 ;;shell here
 (defun hr-open-powershell-here ()
   "Multiply NUMBER by seven."
   (interactive)
   (cond ((stringp (buffer-file-name))
-         (call-process-shell-command (format "start powershell -NoExit cd %s" (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))))
+         (call-process-shell-command (format "C:/Users/kingcc/program/cmder_mini/Cmder.exe %s" (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))))
+
+(defun hr-open-powershel-dire ()
+  "some ..."
+  (interactive)
+  (call-process-shell-command  (format "C:/Users/kingcc/program/cmder_mini/Cmder.exe %s" (dired-default-directory)) nil nil))
+
+;;shell here
+(defun hr-open-wsl-here ()
+  "Multiply NUMBER by seven."
+  (interactive)
+  (cond ((stringp (buffer-file-name))
+         (call-process-shell-command (format "C:/Users/kingcc/program/wsl-terminal/open-wsl.exe %s" (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))))
 
 ;;explorer here
 (defun hr-open-explorer()

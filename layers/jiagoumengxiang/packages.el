@@ -34,7 +34,8 @@
 ;;    request
 ;;    org-gcal
 ;;    alert
-    org-brain
+;;    org-brain
+;;    org-alert
     )
   "The list of Lisp packages required by the jiagoumengxiang layer.
 
@@ -80,25 +81,6 @@ Each entry is either:
 ;;   (use-package alert)
 ;;  )
 
-(defun jiagoumengxiang/init-org-brain()
-  (use-package org-brain
-    :defer t
-    :init
-    (progn
-      (spacemacs/set-leader-keys
-        ;; org-brain
-        "aob" 'org-brain-open
-        "aoB" 'org-brain-visualize)
-      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
-    ;;org-brain
-    (setq org-brain-path "~/Documents/jianguocloud/brain")
-    ;; For Evil users
-    (with-eval-after-load 'evil
-      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
-    :config
-    ;; Save/load org-brain caches to/from disk
-    (org-brain-activate-cache-saving)
-    ))
 
 
 ;;packages.el ends here

@@ -47,11 +47,6 @@
   (cond ((stringp (buffer-file-name))
          (call-process-shell-command (format "start %s" (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))))
 
-;;shell here
-(defun hr-open-chrome()
-  "Multiply NUMBER by seven."
-  (interactive)
-  (call-process-shell-command  "start %HOME%/.spacemacs.d/chrome" nil nil))
 
 (defun hr-notify (title message)
   (interactive)
@@ -65,15 +60,3 @@
   "test agenda"
   (interactive)
   (org-agenda-redo))
-
-(defun hr-request()
-  ""
-  (interactive)
-  (request
-   "http://httpbin.org/get"
-   :params '(("key" . "value") ("key2" . "value2"))
-   :parser 'json-read
-   :success (cl-function
-             (lambda (&key data &allow-other-keys)
-               (message "I sent: %S" (assoc-default 'args data))))))
-

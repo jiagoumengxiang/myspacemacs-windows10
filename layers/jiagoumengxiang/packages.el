@@ -31,7 +31,7 @@
 
 (defconst jiagoumengxiang-packages
   '(
-;;    request
+    request
 ;;    org-gcal
 ;;    alert
 ;;    org-brain
@@ -64,10 +64,10 @@ Each entry is either:
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
 
-;; (defun jiagoumengxiang/init-request()
-;;   "Initialize calfw and add key-bindings"
-;;   (use-package request)
-;;   )
+ (defun jiagoumengxiang/init-request()
+   "Initialize calfw and add key-bindings"
+   (use-package request)
+   )
 
 ;; (defun jiagoumengxiang/init-org-gcal ()
 ;;   "Initialize org-gcal"

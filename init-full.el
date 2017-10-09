@@ -63,6 +63,7 @@ values."
      (go :variables
          go-tab-width 4)
      jiagoumengxiang
+     (clojure :variables clojure-enable-fancify-symbols t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -75,7 +76,7 @@ values."
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
-
+                                    spaceline
                                     )
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -119,7 +120,7 @@ values."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'emacs
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -176,7 +177,7 @@ values."
    ;; the key pairs C-i, TAB and C-m, RET.
    ;; Setting it to a non-nil value, allows for separate commands under <C-i>
    ;; and TAB or <C-m> and RET.
-   ;; In the terminal, these pairs are generally indistinguishable, so this only
+ ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
    dotspacemacs-distinguish-gui-tab nil
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
@@ -239,14 +240,14 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -337,6 +338,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
      #b00000000
      #b00000000])
 
+  ;; 设置垃圾回收，在Windows下，emacs25版本会频繁出发垃圾回收，所以需要设置
+  (when (eq system-type 'windows-nt)
+    (setq gc-cons-threshold (* 512 1024 1024))
+    (setq gc-cons-percentage 0.5)
+    (run-with-idle-timer 5 t #'garbage-collect)
+    ;; 显示垃圾回收信息，这个可以作为调试用
+    ;; (setq garbage-collection-messages t)
+    )
+
 )
 
 (defun dotspacemacs/user-config ()
@@ -356,27 +366,23 @@ you should place your code here."
           '((sequence "TODO(T)" "WAITING(W)" "|" "DONE(D)" "ABORT(A)")
             (sequencep "thinking(t)" "researching(r)" "replaying(p)")))
     (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
-    (setq org-agenda-files (quote ("~/org/")))
+    (setq org-agenda-files (quote ("~/org/version3/")))
+    (setq org-refile-use-outline-path 'file)
     (setq org-capture-templates(quote (
-                                     ("a" "重要紧急" entry (file+headline "~/org/gtd.org" "Tasks")
-                                      "* TODO [#A] %?\n  %i\n")
-                                     ("b" "重要不紧急" entry (file+headline "~/org/gtd.org" "Tasks")
-                                      "* thinking [#B] %?\n  %i\n")
-                                     ("c" "不重要紧急" entry (file+headline "~/org/gtd.org" "Tasks")
-                                      "* TODO thinking [#C] %?\n  %i\n")
-                                     ("T" "不重要不紧急" entry (file+headline "~/org/gtd.org" "Tasks")
-                                      "* thinking %?\n  %i\n ")
-                                     ("t" "想法" entry (file+headline "~/org/thinking.org" "Thinking")
-                                      "* thinking %?\n  %i\n ")
-                                     ("h" "习惯" entry (file+headline "~/org/hobbit.org" "hobbit")
-                                      "* TODO thinking %?\n  %i\n ")
-                                     ("p" "项目" entry (file+headline "~/org/project.org" "project")
-                                      "* [%] %?\n  %i\n ")
-                                     ("s" "日程" entry (file+headline "~/org/calender.org" "Calender")
-                                      "* [%] %?\n  %i\n ")
+                                     ("i" "收集" entry (file "~/org/version3/收集.org")
+                                      "* %? %i\n %T\n")
+                                     ("s" "思维实验" entry (file "~/org/version3/思维.org")
+                                      "* %? %i\n %T\n")
+                                     ("t" "中断" entry (file "~/org/version3/中断.org")
+                                     "* TODO [#A] %? %i\n %T\n")
                                      )))
+    (setq org-refile-targets (quote (("~/org/version2/收集.org" :maxlevel . 1)
+                                    ("~/org/version2/临时.org" :level . 1)
+                                    ("~/org/version2/项目.org" :level . 1)
+                                    ("~/org/version2/备忘.org" :level . 1)
+                                    ("~/org/version2/结束.org" :level . 1))))
 
-    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
+    (setq org-bullets-bullet-list '("☯" "✓" "☂" "߷♫"))
 
     (setq org-ditaa-jar-path "~/ditaa.jar")
     (setq org-plantuml-jar-path (expand-file-name "~/plantuml.jar"))
@@ -417,22 +423,14 @@ you should place your code here."
 
 )
 
-  (setq-default tab-width 2)
+  (setq-default tab-width 4)
   ;;开启emacs透明度
-  (spacemacs/toggle-transparency)
+  ;;(spacemacs/toggle-transparency)
 
   (dolist (charset '(kana han cjk-misc bopomofo))
     (set-fontset-font (frame-parameter nil 'font) charset
                       (font-spec :family "微软雅黑" :size 21)))
 
-  ;; 设置垃圾回收，在Windows下，emacs25版本会频繁出发垃圾回收，所以需要设置
-  (when (eq system-type 'windows-nt)
-    (setq gc-cons-threshold (* 512 1024 1024))
-    (setq gc-cons-percentage 0.5)
-    (run-with-idle-timer 5 t #'garbage-collect)
-    ;; 显示垃圾回收信息，这个可以作为调试用
-    ;; (setq garbage-collection-messages t)
-    )
 
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8)
@@ -483,7 +481,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (youdao-dictionary names chinese-word-at-point pangu-spacing find-by-pinyin-dired chinese-pyim pyim pyim-basedict ace-pinyin pinyinlib org-category-capture org-alert symon string-inflection password-generator impatient-mode window-purpose imenu-list godoctor evil-org evil-lion editorconfig kotlin-mode pyvenv pyenv-mode py-isort pip-requirements material-theme hy-mode helm-pydoc helm-purpose go-rename cython-mode company-anaconda anaconda-mode pythonic pytest spotify helm-spotify multi org-brain request-deferred deferred calfw org-gcal live-py-mode scala-mode yapfify ensime sbt-mode meghanada sql-indent yaml-mode dockerfile-mode docker tablist docker-tramp powershell winum unfill fuzzy plantuml-mode coffee-mode go-guru go-eldoc company-go go-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link)))
+    (sayid clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider seq queue clojure-mode youdao-dictionary names chinese-word-at-point pangu-spacing find-by-pinyin-dired chinese-pyim pyim pyim-basedict ace-pinyin pinyinlib org-category-capture org-alert symon string-inflection password-generator impatient-mode window-purpose imenu-list godoctor evil-org evil-lion editorconfig kotlin-mode pyvenv pyenv-mode py-isort pip-requirements material-theme hy-mode helm-pydoc helm-purpose go-rename cython-mode company-anaconda anaconda-mode pythonic pytest spotify helm-spotify multi org-brain request-deferred deferred calfw org-gcal live-py-mode scala-mode yapfify ensime sbt-mode meghanada sql-indent yaml-mode dockerfile-mode docker tablist docker-tramp powershell winum unfill fuzzy plantuml-mode coffee-mode go-guru go-eldoc company-go go-mode helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag ace-jump-helm-line groovy-mode smeargle rainbow-mode rainbow-identifiers orgit magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor color-identifiers-mode gradle-mode company-web web-completion-data company-tern dash-functional company-statistics company-emacs-eclim company auto-yasnippet ac-ispell auto-complete powerline spinner hydra parent-mode helm helm-core flx smartparens iedit anzu evil goto-chg undo-tree highlight popup f s diminish projectile pkg-info epl counsel swiper ivy bind-map bind-key packed dash async avy package-build xterm-color web-mode web-beautify tern tagedit slim-mode shell-pop scss-mode sass-mode pug-mode org-projectile org-present org org-pomodoro alert log4e gntp org-download mwim multi-term mmm-mode markdown-toc markdown-mode livid-mode skewer-mode simple-httpd less-css-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc htmlize haml-mode gnuplot gh-md flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help emmet-mode eclim yasnippet ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline smex restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link)))
  '(sql-mysql-login-params (quote (user password server database port))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

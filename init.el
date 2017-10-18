@@ -29,7 +29,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(clojure
+     windows-scripts
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -42,7 +43,9 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      markdown
-     neotree
+     java
+     treemacs
+     latex
      org
      (shell :variables
             shell-default-height 30
@@ -52,6 +55,7 @@ This function should only modify configuration layer settings."
      ;; version-control
      html
      javascript
+     jiagoumengxiang
      docker
      )
    ;; List of additional packages that will be installed without being
@@ -410,7 +414,7 @@ before packages are loaded."
                                     ("~/org/version2/备忘.org" :level . 1)
                                     ("~/org/version2/结束.org" :level . 1))))
 
-    (setq org-bullets-bullet-list '("☯" "✓" "☂" "߷♫"))
+    (setq org-bullets-bullet-list '("☯" "✓" "☂" "♫"))
 
     (setq org-ditaa-jar-path "~/ditaa.jar")
     (setq org-plantuml-jar-path (expand-file-name "~/plantuml.jar"))
@@ -455,6 +459,7 @@ before packages are loaded."
   ;;开启emacs透明度
   ;;(spacemacs/toggle-transparency)
 
+;;  (org-agenda-list)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -471,13 +476,13 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (pyim pyim-basedict pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib org-brain evil-org yaml-mode xterm-color web-mode web-beautify unfill toc-org tagedit smeargle slim-mode shell-pop scss-mode sass-mode pug-mode orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download org-bullets mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode less-css-mode js2-refactor multiple-cursors js2-mode js-doc impatient-mode simple-httpd htmlize helm-gitignore request helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip pos-tip flycheck org-plus-contrib evil-magit magit git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat company-web web-completion-data company-tern s dash-functional tern dash company-statistics company coffee-mode auto-yasnippet yasnippet ac-ispell auto-complete which-key use-package pcre2el neotree macrostep hydra help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag evil-visualstar evil-escape elisp-slime-nav bind-map auto-compile ace-window ace-jump-helm-line))))
+    (treemacs-projectile treemacs pfuture f evil helm helm-core projectile smartparens sayid popwin parinfer clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue clojure-mode meghanada gradle-mode ensime sbt-mode scala-mode company-emacs-eclim eclim powershell helm-gtags ggtags pyim pyim-basedict pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib org-brain evil-org yaml-mode xterm-color web-mode web-beautify unfill toc-org tagedit smeargle slim-mode shell-pop scss-mode sass-mode pug-mode orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download org-bullets mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode less-css-mode js2-refactor multiple-cursors js2-mode js-doc impatient-mode simple-httpd htmlize helm-gitignore request helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip pos-tip flycheck org-plus-contrib evil-magit magit git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat company-web web-completion-data company-tern s dash-functional tern dash company-statistics company coffee-mode auto-yasnippet yasnippet ac-ispell auto-complete which-key use-package pcre2el neotree macrostep hydra help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag evil-visualstar evil-escape elisp-slime-nav bind-map auto-compile ace-window ace-jump-helm-line))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-table ((t (:foreground "#67cfcf" :family "Inconsolata" :size 14)))))
 )
 
 (custom-set-faces

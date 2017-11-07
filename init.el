@@ -42,9 +42,10 @@ This function should only modify configuration layer settings."
      better-defaults
      emacs-lisp
      git
-     markdown
+     (markdown :variables markdown-live-preview-engine 'vmd)
      java
      treemacs
+     plantuml
      latex
      org
      (shell :variables
@@ -134,7 +135,19 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(monokai
+                         material-light
+                         bubbleberry
+                         colorsarenice-dark
+                         dichromacy
+                         junio
+                         whiteboard
+                         monokai
+                         lush
+                         material
+                         darktooth
+                         sanityinc-tomorrow-day
+                         spacemacs-dark
                          spacemacs-light)
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -395,7 +408,7 @@ before packages are loaded."
     ;; here goes your Org config :)
     ;; ....
     (setq org-todo-keywords
-          '((sequence "TODO(T)" "WAITING(W)" "|" "DONE(D)" "ABORT(A)")
+          '((sequence "TODO(T)" "WAITING(W)" "|" "DONE(D@)" "ABORT(A@)")
             (sequencep "thinking(t)" "researching(r)" "replaying(p)")))
     (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
     (setq org-agenda-files (quote ("~/org/version3/")))
@@ -408,11 +421,13 @@ before packages are loaded."
                                      ("t" "中断" entry (file "~/org/version3/中断.org")
                                      "* TODO [#A] %? %i\n %T\n")
                                      )))
-    (setq org-refile-targets (quote (("~/org/version2/收集.org" :maxlevel . 1)
-                                    ("~/org/version2/临时.org" :level . 1)
-                                    ("~/org/version2/项目.org" :level . 1)
-                                    ("~/org/version2/备忘.org" :level . 1)
-                                    ("~/org/version2/结束.org" :level . 1))))
+    (setq org-refile-targets (quote (("~/org/version3/收集.org" :maxlevel . 1)
+                                    ("~/org/version3/中断.org" :level . 1)
+                                    ("~/org/version3/浅度.org" :level . 1)
+                                    ("~/org/version3/深度.org" :level . 1)
+                                    ("~/org/version3/思维.org" :level . 1)
+                                    ("~/org/version3/清单.org" :level . 1)
+                                    ("~/org/version3/目标.org" :level . 1))))
 
     (setq org-bullets-bullet-list '("☯" "✓" "☂" "♫"))
 
@@ -457,7 +472,7 @@ before packages are loaded."
 
   (setq-default tab-width 4)
   ;;开启emacs透明度
-  ;;(spacemacs/toggle-transparency)
+  (spacemacs/toggle-transparency)
 
 ;;  (org-agenda-list)
 )
@@ -476,14 +491,14 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (treemacs-projectile treemacs pfuture f evil helm helm-core projectile smartparens sayid popwin parinfer clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue clojure-mode meghanada gradle-mode ensime sbt-mode scala-mode company-emacs-eclim eclim powershell helm-gtags ggtags pyim pyim-basedict pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib org-brain evil-org yaml-mode xterm-color web-mode web-beautify unfill toc-org tagedit smeargle slim-mode shell-pop scss-mode sass-mode pug-mode orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download org-bullets mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode less-css-mode js2-refactor multiple-cursors js2-mode js-doc impatient-mode simple-httpd htmlize helm-gitignore request helm-css-scss helm-company helm-c-yasnippet haml-mode gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip pos-tip flycheck org-plus-contrib evil-magit magit git-commit with-editor eshell-z eshell-prompt-extras esh-help emmet-mode dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat company-web web-completion-data company-tern s dash-functional tern dash company-statistics company coffee-mode auto-yasnippet yasnippet ac-ispell auto-complete which-key use-package pcre2el neotree macrostep hydra help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag evil-visualstar evil-escape elisp-slime-nav bind-map auto-compile ace-window ace-jump-helm-line))))
+    (vmd-mode treemacs-projectile treemacs pfuture f yaml-mode xterm-color which-key web-mode web-beautify use-package unfill toc-org tagedit sublime-themes smeargle slim-mode shell-pop scss-mode sayid sass-mode pug-mode powershell plantuml-mode pcre2el orgit org-projectile org-present org-pomodoro org-download org-bullets org-brain mwim multi-term monokai-theme mmm-mode meghanada material-theme markdown-toc magit-gitflow macrostep lush-theme livid-mode js2-refactor js-doc impatient-mode help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag gradle-mode gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip evil-visualstar evil-org evil-magit evil-escape eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav dockerfile-mode docker darktooth-theme company-web company-tern company-statistics company-emacs-eclim company-auctex color-theme-sanityinc-tomorrow coffee-mode clojure-snippets clj-refactor cider-eval-sexp-fu bubbleberry-theme bind-map auto-yasnippet auto-compile ace-window ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-table ((t (:foreground "#67cfcf" :family "Inconsolata" :size 14)))))
-)
+) 
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

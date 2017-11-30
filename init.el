@@ -29,7 +29,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(clojure
+   '(
+     clojure
      windows-scripts
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -43,10 +44,11 @@ This function should only modify configuration layer settings."
      emacs-lisp
      git
      (markdown :variables markdown-live-preview-engine 'vmd)
-     java
+     ;;java
      treemacs
+     python
      plantuml
-     latex
+     ;;latex
      org
      (shell :variables
             shell-default-height 30
@@ -136,17 +138,6 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(monokai
-                         material-light
-                         bubbleberry
-                         colorsarenice-dark
-                         dichromacy
-                         junio
-                         whiteboard
-                         monokai
-                         lush
-                         material
-                         darktooth
-                         sanityinc-tomorrow-day
                          spacemacs-dark
                          spacemacs-light)
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -361,7 +352,7 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-  (setq configuration-layer--elpa-archives
+  (setq configuration-layer-elpa-archives
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
           ("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")))
@@ -387,14 +378,14 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
      #b00000000])
 
   ;; 设置垃圾回收，在Windows下，emacs25版本会频繁出发垃圾回收，所以需要设置
-  (when (eq system-type 'windows-nt)
-    (setq gc-cons-threshold (* 512 1024 1024))
-    (setq gc-cons-percentage 0.5)
-    (run-with-idle-timer 5 t #'garbage-collect)
+;;  (when (eq system-type 'windows-nt)
+;;    (setq gc-cons-threshold (* 512 1024 1024))
+;;    (setq gc-cons-percentage 0.5)
+;;    (run-with-idle-timer 5 t #'garbage-collect)
     ;; 显示垃圾回收信息，这个可以作为调试用
     ;; (setq garbage-collection-messages t)
-    )
-  )
+;;    )
+)
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -411,23 +402,20 @@ before packages are loaded."
           '((sequence "TODO(T)" "WAITING(W)" "|" "DONE(D@)" "ABORT(A@)")
             (sequencep "thinking(t)" "researching(r)" "replaying(p)")))
     (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
-    (setq org-agenda-files (quote ("~/org/version3/")))
+    (setq org-agenda-files (quote ("~/org/version4/")))
     (setq org-refile-use-outline-path 'file)
     (setq org-capture-templates(quote (
-                                     ("i" "收集" entry (file "~/org/version3/收集.org")
+                                     ("i" "记录" entry (file "~/org/version4/事件.org")
                                       "* %? %i\n %T\n")
-                                     ("s" "思维实验" entry (file "~/org/version3/思维.org")
-                                      "* %? %i\n %T\n")
-                                     ("t" "中断" entry (file "~/org/version3/中断.org")
-                                     "* TODO [#A] %? %i\n %T\n")
+                                     ("s" "想法" entry (file "~/org/version4/事件.org")
+                                      "* thinking %? %i\n %T\n")
+                                     ("t" "任务" entry (file "~/org/version4/事件.org")
+                                     "* TODO [#A] %? %i\n")
                                      )))
-    (setq org-refile-targets (quote (("~/org/version3/收集.org" :maxlevel . 1)
-                                    ("~/org/version3/中断.org" :level . 1)
-                                    ("~/org/version3/浅度.org" :level . 1)
-                                    ("~/org/version3/深度.org" :level . 1)
-                                    ("~/org/version3/思维.org" :level . 1)
-                                    ("~/org/version3/清单.org" :level . 1)
-                                    ("~/org/version3/目标.org" :level . 1))))
+    (setq org-refile-targets (quote (("~/org/version4/事件.org" :maxlevel . 1)
+                                    ("~/org/version4/深度.org" :level . 1)
+                                    ("~/org/version4/行动.org" :level . 1)
+                                    ("~/org/version4/清单.org" :level . 1))))
 
     (setq org-bullets-bullet-list '("☯" "✓" "☂" "♫"))
 
@@ -470,7 +458,7 @@ before packages are loaded."
 
     )
 
-  (setq-default tab-width 4)
+  ;;(setq-default tab-width 4)
   ;;开启emacs透明度
   (spacemacs/toggle-transparency)
 
@@ -491,7 +479,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (vmd-mode treemacs-projectile treemacs pfuture f yaml-mode xterm-color which-key web-mode web-beautify use-package unfill toc-org tagedit sublime-themes smeargle slim-mode shell-pop scss-mode sayid sass-mode pug-mode powershell plantuml-mode pcre2el orgit org-projectile org-present org-pomodoro org-download org-bullets org-brain mwim multi-term monokai-theme mmm-mode meghanada material-theme markdown-toc magit-gitflow macrostep lush-theme livid-mode js2-refactor js-doc impatient-mode help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag gradle-mode gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip evil-visualstar evil-org evil-magit evil-escape eshell-z eshell-prompt-extras esh-help ensime emmet-mode elisp-slime-nav dockerfile-mode docker darktooth-theme company-web company-tern company-statistics company-emacs-eclim company-auctex color-theme-sanityinc-tomorrow coffee-mode clojure-snippets clj-refactor cider-eval-sexp-fu bubbleberry-theme bind-map auto-yasnippet auto-compile ace-window ace-jump-helm-line ac-ispell))))
+    (which-key web-mode treemacs-projectile treemacs org-download hy-mode company-web ace-window avy evil markdown-mode org-plus-contrib magit yapfify yaml-mode xterm-color web-completion-data web-beautify vmd-mode use-package unfill undo-tree toc-org tagedit sublime-themes smeargle slim-mode shell-pop scss-mode sayid sass-mode racket-mode pyvenv pytest pyenv-mode py-isort pug-mode powershell plantuml-mode pip-requirements pfuture pcre2el orgit org-projectile org-present org-pomodoro org-bullets org-brain mwim multi-term monokai-theme mmm-mode material-theme markdown-toc magit-gitflow macrostep lush-theme livid-mode live-py-mode js2-refactor js-doc impatient-mode help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag goto-chg gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-commit gh-md fuzzy flycheck-pos-tip evil-visualstar evil-org evil-magit evil-escape eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dockerfile-mode docker darktooth-theme cython-mode company-tern company-statistics company-anaconda color-theme-sanityinc-tomorrow coffee-mode clojure-snippets clj-refactor cider-eval-sexp-fu bubbleberry-theme bind-map auto-yasnippet auto-compile ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

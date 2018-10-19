@@ -1,9 +1,25 @@
 
+
+(defun hr-markdown-image ()
+  "Multiply NUMBER by seven."
+  (interactive)
+  ;;(start-process "plantuml" "*plantuml*" "" "--detach" "README.mdl"))
+  (start-process-shell-command (format "java -jar C:/Users/kingd/plantuml.jar -charset UTF-8 %s -o %s" (buffer-file-name) (substring (buffer-file-name) 0 (string-match (buffer-name) (buffer-file-name)))) nil nil))
+
+
+(defun hr-markdown-preview ()
+  "Multiply NUMBER by seven."
+  (interactive)
+  (start-process "shiba" "*shiba*" "shiba" "--detach" "README.mdl"))
+  ;;(start-process-shell-command "shiba README.md" nil nil))
+
+
 ;;shell here
 (defun hr-open-powershell ()
   "Multiply NUMBER by seven."
   (interactive)
   (call-process-shell-command  " start c:/Users/kingd/.spacemacs.d/ConEmu.lnk -Dir %HOME% -run powershell" nil nil))
+
 
 
 ;;shell here
@@ -59,4 +75,4 @@
 (defun hr-test()
   "test agenda"
   (interactive)
-  (org-agenda-redo))
+  (message (buffer-file-name)))

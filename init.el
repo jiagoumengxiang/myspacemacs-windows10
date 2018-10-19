@@ -30,36 +30,38 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     clojure
-     windows-scripts
+;;     clojure
+;;     windows-scripts
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     helm
-     yaml
+     ivy
+;;     yaml
      auto-completion
      better-defaults
      emacs-lisp
      git
      (markdown :variables markdown-live-preview-engine 'vmd)
-     ;;java
+     java
      treemacs
-     python
-     plantuml
+;;     python
+     ;;plantuml
      ;;latex
-     org
+     (org :variables
+          org-enable-hugo-support t)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
      ;; spell-checking
-     syntax-checking
+;;     syntax-checking
      ;; version-control
      html
-     javascript
+;;     javascript
      jiagoumengxiang
-     docker
+     ;;docker
+     ;; ox-hugo config
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -128,8 +130,9 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 7))
+   ;;dotspacemacs-startup-lists '((recents . 5)
+   ;;                             (projects . 7))
+   dotspacemacs-startup-lists nil
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -146,7 +149,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("yahei mono"
-                               :size 16
+                               :size 18
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -243,14 +246,14 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-loading-progress-bar t
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -351,7 +354,7 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-  (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+;;  (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   (setq configuration-layer-elpa-archives
         '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
           ("org-cn"   . "http://elpa.emacs-china.org/org/")
@@ -399,25 +402,66 @@ before packages are loaded."
     ;; here goes your Org config :)
     ;; ....
     (setq org-todo-keywords
-          '((sequence "TODO(T)" "WAITING(W)" "|" "DONE(D@)" "ABORT(A@)")
-            (sequencep "thinking(t)" "researching(r)" "replaying(p)")))
-    (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
-    (setq org-agenda-files (quote ("~/org/version4/")))
-    (setq org-refile-use-outline-path 'file)
-    (setq org-capture-templates(quote (
-                                     ("i" "记录" entry (file "~/org/version4/事件.org")
-                                      "* %? %i\n %T\n")
-                                     ("s" "想法" entry (file "~/org/version4/事件.org")
-                                      "* thinking %? %i\n %T\n")
-                                     ("t" "任务" entry (file "~/org/version4/事件.org")
-                                     "* TODO [#A] %? %i\n")
-                                     )))
-    (setq org-refile-targets (quote (("~/org/version4/事件.org" :maxlevel . 1)
-                                    ("~/org/version4/深度.org" :level . 1)
-                                    ("~/org/version4/行动.org" :level . 1)
-                                    ("~/org/version4/清单.org" :level . 1))))
+          '(
+;;            (sequence "todo(T!)" "waiting(W)" "打断(r)" "收集(i)" "日程(s)" "成就(a)" "工程(p)" "临时(t)" "|")
+            (sequence "todo(T!)" "waiting(W!)" "|" "cancel(C@)" "scheduled(S!)" "done(D!)")
+            ;;(sequence "o(o)" "|" "\\(\\)" "x(x)" "<(<)" ">(>)" "/(/)")
+            ))
 
-    (setq org-bullets-bullet-list '("☯" "✓" "☂" "♫"))
+    (setq org-use-fast-todo-selection t)
+;;    (setq org-log-done t) ;; 变到 done 状态的时候，记录一下时间
+    (setq org-agenda-files (quote ("~/Dropbox/org/")))
+    (setq org-refile-use-outline-path 'file)
+
+    (setq org-capture-templates(quote (
+                                       ("s" "日程" entry (file+datetree "~/Dropbox/org/Schedule.org")
+                                        "* 日程 %? %i\n SCHEDULED: %^T\n")
+                                       ("a" "成就" entry (file "~/Dropbox/org/Award.org")
+                                        "* 成就 %? %i\n")
+                                       ("p" "工程" entry (file "~/Dropbox/org/Project.org")
+                                        "* 工程 %? %i [/]\n :PROPERTIES:\n :CATEGORY: %i\n :END:\n %U\n")
+                                       ("t" "临时" entry (file "~/Dropbox/org/Temp.org")
+                                        "* 临时 %? %i\n %U\n")
+                                       ("n" "笔记" entry (file "~/Dropbox/org/Note.org")
+                                        "* ✍ %U - %^{heading} %^g \n %?")
+                                       )))
+
+    ;; 准备(蓝色系)[SkyBlue,RoyalBlue] -> 
+    ;; 在做(黄色系)[yellow,gold] -> 
+    ;; 未成功(粉色系)[Pink,Plum] -> 
+    ;; 成功(绿色系)[SpringGreen,GreenYellow] -> 
+    ;; 失败(红色系)[LightSalmon,OrangeRed]
+    ;; 普通(白色系)[white]
+    (setq org-todo-keyword-faces
+          ;;common
+          '(;;journal
+            ("✍" . "SkyBlue") ("<" . "Pink") (">" . "Plum") ("x" . "OrangeRed")  ("/" . "white")("\\" . "SpringGreen")
+            ;;award
+            ("成就" . "RoyalBlue")
+            ;;project
+            ("工程" . "RoyalBlue") ("在建" . "yellow") ("建成" . "SpringGreen") ("烂尾" . "OrangeRed")
+            ("next" . "gold")("fulfill" . "GreenYellow")("failure" . "LightSalmon")
+            ;;schedule
+            ("日程" . "SkyBlue")
+            ;;templates
+            ("临时" . "RoyalBlue")
+            ("done" . "GreenYellow") ("cancel" . "LightSalmon")
+            ))
+
+
+    ;;自定义agenda
+    (setq org-agenda-custom-commands
+          '(("a" "all agenda"
+             ((agenda)
+              (todo "日程")
+              (todo "next")
+              (todo "临时")
+              (todo "在建")
+              ))))
+
+;;    (setq org-tag-alist '(("想法" . ?w) ("笔记" . ?h) ("清单" . ?o) ("收藏" . ?l) ("会议" . ?m)))
+
+;;    (setq org-bullets-bullet-list '("☢" "☣" "☂" "♫"))
 
     (setq org-ditaa-jar-path "~/ditaa.jar")
     (setq org-plantuml-jar-path (expand-file-name "~/plantuml.jar"))
@@ -433,7 +477,7 @@ before packages are loaded."
        (js . t)
        ))
     (setq org-confirm-babel-evaluate nil)
-    (setq org-export-backends (quote (html icalendar latex md)))
+    ;;(setq org-export-backends (quote (html icalendar latex md ox-hugo)))
     ;;时间提醒
     (add-hook 'org-pomodoro-started-hook
               (lambda ()
@@ -460,9 +504,10 @@ before packages are loaded."
 
   ;;(setq-default tab-width 4)
   ;;开启emacs透明度
-  (spacemacs/toggle-transparency)
+  ;;(spacemacs/toggle-transparency)
 
-;;  (org-agenda-list)
+  ;;(find-file "~/Dropbox/org/Note.org")
+  (org-agenda)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -479,7 +524,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (which-key web-mode treemacs-projectile treemacs org-download hy-mode company-web ace-window avy evil markdown-mode org-plus-contrib magit yapfify yaml-mode xterm-color web-completion-data web-beautify vmd-mode use-package unfill undo-tree toc-org tagedit sublime-themes smeargle slim-mode shell-pop scss-mode sayid sass-mode racket-mode pyvenv pytest pyenv-mode py-isort pug-mode powershell plantuml-mode pip-requirements pfuture pcre2el orgit org-projectile org-present org-pomodoro org-bullets org-brain mwim multi-term monokai-theme mmm-mode material-theme markdown-toc magit-gitflow macrostep lush-theme livid-mode live-py-mode js2-refactor js-doc impatient-mode help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag goto-chg gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-commit gh-md fuzzy flycheck-pos-tip evil-visualstar evil-org evil-magit evil-escape eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dockerfile-mode docker darktooth-theme cython-mode company-tern company-statistics company-anaconda color-theme-sanityinc-tomorrow coffee-mode clojure-snippets clj-refactor cider-eval-sexp-fu bubbleberry-theme bind-map auto-yasnippet auto-compile ace-jump-helm-line ac-ispell))))
+    (ox-hugo yasnippet-snippets xterm-color which-key wgrep web-mode web-beautify vmd-mode use-package unfill treemacs-projectile toc-org tagedit smex smeargle slim-mode shell-pop scss-mode sass-mode request pug-mode pcre2el overseer orgit org-present org-pomodoro org-mime org-download org-bullets org-brain nameless mwim multi-term monokai-theme mmm-mode markdown-toc magit-svn magit-gitflow macrostep ivy-yasnippet ivy-xref ivy-hydra impatient-mode helm-make gnuplot gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flx evil-org evil-magit eshell-z eshell-prompt-extras esh-help emmet-mode elisp-slime-nav dotenv-mode diminish counsel-css company-web company-statistics bind-map auto-yasnippet auto-compile ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
